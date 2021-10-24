@@ -59,18 +59,6 @@ export default {
     }
   },
   methods: {
-    addChapterComponent(){
-      let chapter = new Chapter(this.player)
-
-      const chapterOptions = {};
-      const controlBar = this.player.getChild('ControlBar');
-      // console.log('control bar: ',controlBar);
-      const pictureInPictureToggle = controlBar.getChild('PictureInPictureToggle');
-      console.log('picture in picture: ', pictureInPictureToggle);
-      const pipIndex = controlBar.children().indexOf(pictureInPictureToggle)
-      // console.log('pipIndex: ',pipIndex)
-      controlBar.addChild(chapter, chapterOptions, pipIndex)
-    },
 
     onPlayerPlay(player) {
       // console.log("player play!", player);
@@ -87,7 +75,9 @@ let bigPlayButton = document.querySelector('.vjs-big-play-button');
     onPlayerReady(player) {
       // console.log("player ready!", player);
       // this.player.play();
-      this.addChapterComponent()
+      // this.addChapterComponent()
+      new Chapter(player)
+      // .addChapterComponent(player)     
     },
     playVideo: function(source) {
       const video = {
