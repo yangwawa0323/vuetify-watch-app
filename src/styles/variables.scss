@@ -1,0 +1,17 @@
+$badge-font-size: 10px;
+$badge-height: 20px;
+
+
+.v-badge {
+
+	display: flex;
+
+	align-content: center;
+	justify-content: center;
+
+
+	&__badge {
+		line-height: 1.3;
+	}
+
+}
