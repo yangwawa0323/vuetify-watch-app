@@ -20,6 +20,7 @@
 <script>
 import videojs from "video.js";
 import VideoPlayer from "vue-videojs7/src/components/VideoPlayer.vue";
+import Chapter from  "../components/Chapter"
 
 export default {
   name: "MyVideo",
@@ -58,6 +59,19 @@ export default {
     }
   },
   methods: {
+    addChapterComponent(){
+      let chapter = new Chapter(this.player)
+
+      const chapterOptions = {};
+      const controlBar = this.player.getChild('ControlBar');
+      // console.log('control bar: ',controlBar);
+      const pictureInPictureToggle = controlBar.getChild('PictureInPictureToggle');
+      console.log('picture in picture: ', pictureInPictureToggle);
+      const pipIndex = controlBar.children().indexOf(pictureInPictureToggle)
+      // console.log('pipIndex: ',pipIndex)
+      controlBar.addChild(chapter, chapterOptions, pipIndex)
+    },
+
     onPlayerPlay(player) {
       // console.log("player play!", player);
       // this.paused = this.player.paused()? true : false
@@ -73,6 +87,7 @@ let bigPlayButton = document.querySelector('.vjs-big-play-button');
     onPlayerReady(player) {
       // console.log("player ready!", player);
       // this.player.play();
+      this.addChapterComponent()
     },
     playVideo: function(source) {
       const video = {
@@ -165,6 +180,27 @@ let bigPlayButton = document.querySelector('.vjs-big-play-button');
   transition: all 4s ease-in-out !important;
 }
 
+
+.vjs-chapter-overlay {
+  margin: auto;
+  background: gray;
+  width: 3rem;
+  border-radius: 12px;
+  height: 80%;
+  display: flex;
+  opacity: 0.5;
+  justify-content: center;
+  align-items: center;
+  transition: all .5s ease-in-out;
+
+}
+
+.vjs-chapter-overlay:hover{
+  opacity: 1;
+  font-size: .72rem;
+  font-weight: 500;
+  color: yellow;
+}
 
 .video-js{
   display: flex;
