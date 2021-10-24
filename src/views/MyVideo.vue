@@ -76,7 +76,11 @@ let bigPlayButton = document.querySelector('.vjs-big-play-button');
       // console.log("player ready!", player);
       // this.player.play();
       // this.addChapterComponent()
-      new Chapter(player)
+      new Chapter(player,{},()=>{ 
+        setTimeout(()=>{
+        console.log('retrieve data now...')
+        },3000)
+      })
       // .addChapterComponent(player)     
     },
     playVideo: function(source) {

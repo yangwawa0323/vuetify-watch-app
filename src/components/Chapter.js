@@ -4,17 +4,34 @@ import videojs from "video.js"
 const Component = videojs.getComponent("Component");
 
 
+
 // Extends from Component
 export default class Chapter extends Component {
-	constructor(player, options) {
+	constructor(player, options, callbackFunc, ...callbackArgs) {
 		// Initialize super class Component
 		super(player, options)
-		// this.player = player
-		// console.log('Chapter component constructor this.player: ', this.player)
+
+		// save callbackFunc to global variables
+		// Note: createEl return a new object, `this` has been replaced
+		// You have to use global variable to keep constructor variables
+		if (callbackFunc && typeof callbackFunc === "function") {
+			this.callbackFunc = callbackFunc
+			this.CallbackArgs = callbackArgs
+		}
+
+		/** 
+		* IMPORTANT: `this` has not addEventListener method, if you
+		* want bind the events use `on` function
+		*/
+		this.clickEvent()
+
+
 		this.addChapterComponent(player)
 	}
 
 	// Create the Element
+	// Note: CANNOT bind event in this function, in the constructor
+	// is the right way.
 	createEl() {
 		let overlay = videojs.dom.createEl('div',
 			{
@@ -27,15 +44,29 @@ export default class Chapter extends Component {
 		// Inner Content == InnerText
 		videojs.dom.insertContent(overlay, "章节")
 
-		// Custom events
-		overlay.addEventListener('click', () => {
-			console.log('章节')
-		})
-
-		// this.addChapterComponent()
 		return overlay
 	}
-
+	
+	clickEvent() {
+		let _this = this;
+		let action = new Promise((resolve, reject) => {
+			if (this.callbackFunc && typeof this.callbackFunc === "function") {
+				/** 
+				* IMPORTANT: `this` has not addEventListener method, if you
+				* want bind the events use `on` function
+				*/
+				 _this.on('click',async () => {
+					// 	// resolve(console.log('Click'));
+					await resolve(_this.callbackFunc.apply(_this, _this.callbackArgs))
+				})
+			} else {
+				reject(
+					new Error("You should defined the callback function to retrieve the data")
+				)
+			}
+		})
+		return action
+	}
 
 	addChapterComponent(player) {
 		//   let chapter = new Chapter(this.player)
@@ -46,7 +77,7 @@ export default class Chapter extends Component {
 		const pictureInPictureToggle = controlBar.getChild('PictureInPictureToggle');
 		//   console.log('picture in picture: ', pictureInPictureToggle);
 		const pipIndex = controlBar.children().indexOf(pictureInPictureToggle)
-		console.log('pipIndex: ', pipIndex)
+		// console.log('pipIndex: ', pipIndex)
 		controlBar.addChild(this, chapterOptions, pipIndex)
 	}
 }
