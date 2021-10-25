@@ -16,7 +16,7 @@ export default class Chapter extends Component {
 		// You have to use global variable to keep constructor variables
 		if (callbackFunc && typeof callbackFunc === "function") {
 			this.callbackFunc = callbackFunc
-			this.CallbackArgs = callbackArgs
+			this.callbackArgs = callbackArgs
 		}
 
 		/** 
@@ -74,11 +74,16 @@ export default class Chapter extends Component {
 		const chapterOptions = {};
 		// this.player() => Player Component
 		const controlBar = player.getChild('ControlBar');
-		const pictureInPictureToggle = controlBar.getChild('PictureInPictureToggle');
+		// Due to Firefox has floating PictureInPictureToggle which is not be a child
+		// of controlBar, We change the chapter component before the FullscreenToggle
+		// in case of compatible of both Firefox and Chrome.
+		const fullscreen = controlBar.getChild('FullscreenToggle');
 		//   console.log('picture in picture: ', pictureInPictureToggle);
-		const pipIndex = controlBar.children().indexOf(pictureInPictureToggle)
-		// console.log('pipIndex: ', pipIndex)
-		controlBar.addChild(this, chapterOptions, pipIndex)
+		const fsIndex = controlBar.children().indexOf(fullscreen)
+		console.log('pipIndex: ', fsIndex)
+		if (fsIndex !== -1) {
+			controlBar.addChild(this, chapterOptions, fsIndex)
+		}
 	}
 }
 

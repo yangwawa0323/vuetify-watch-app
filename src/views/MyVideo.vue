@@ -76,11 +76,12 @@ let bigPlayButton = document.querySelector('.vjs-big-play-button');
       // console.log("player ready!", player);
       // this.player.play();
       // this.addChapterComponent()
-      new Chapter(player,{},()=>{ 
+      new Chapter(player,{},(timeout,message)=>{ 
         setTimeout(()=>{
-        console.log('retrieve data now...')
-        },3000)
-      })
+           console.log(message)
+        },timeout)
+      }, 
+      3000,"Retrieve the data from remote server...")
       // .addChapterComponent(player)     
     },
     playVideo: function(source) {
